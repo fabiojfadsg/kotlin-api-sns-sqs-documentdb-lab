@@ -1,0 +1,32 @@
+<main>
+  <header><span class="marca" aria-hidden="true">C</span><span>Laboratório de clientes</span></header>
+  <section class="card" aria-labelledby="titulo">
+    <p class="eyebrow">NOVO CLIENTE</p>
+    <h1 id="titulo">Solicitar cadastro</h1>
+    <p class="intro">Preencha os dados abaixo. Todos os campos são obrigatórios.</p>
+    @if (config.demo) {
+      <aside class="aviso"><strong>Modo demonstração</strong><p>Você poderá conferir os dados ao clicar. Nada será enviado ou salvo.</p></aside>
+    }
+    <form [formGroup]="form" (ngSubmit)="enviar()" novalidate [attr.aria-busy]="enviando()">
+      <fieldset [disabled]="enviando()">
+        <div class="campo"><label for="nome">Nome</label><input id="nome" formControlName="nome" autocomplete="name" required placeholder="Seu nome completo" [attr.aria-invalid]="invalido('nome')" aria-describedby="nome-erro">
+        <p id="nome-erro" class="erro-campo">@if (invalido('nome')) { Informe seu nome. }</p></div>
+        <div class="campo"><label for="email">E-mail</label><input id="email" type="email" formControlName="email" autocomplete="email" required placeholder="voce@exemplo.com" [attr.aria-invalid]="invalido('email')" aria-describedby="email-erro">
+        <p id="email-erro" class="erro-campo">@if (invalido('email')) { Informe um e-mail válido. }</p></div>
+        <div class="campo"><label for="cpf">CPF</label><input id="cpf" formControlName="cpf" inputmode="numeric" required placeholder="00000000000" [attr.aria-invalid]="invalido('cpf')" aria-describedby="cpf-ajuda cpf-erro">
+        <p id="cpf-ajuda" class="ajuda">Digite os 11 números, sem pontos ou traço.</p>
+        <p id="cpf-erro" class="erro-campo">@if (invalido('cpf')) { O CPF deve conter exatamente 11 dígitos. }</p></div>
+        <button type="submit" [disabled]="enviando()">{{ enviando() ? 'Enviando…' : config.demo ? 'Conferir solicitação' : 'Solicitar cadastro' }}</button>
+      </fieldset>
+    </form>
+    @if (erro()) { <p class="mensagem falha" role="alert">{{ erro() }}</p> }
+    <div role="status" aria-live="polite">
+      @if (resultado(); as resposta) {
+        @if (resposta.modo === 'demonstracao') {
+          <section class="resultado"><h2>Prévia da solicitação</h2><p>Estes seriam os dados enviados. Nenhum cadastro foi salvo.</p><pre>{{ resposta.payload | json }}</pre></section>
+        } @else { <p class="mensagem sucesso">Solicitação recebida. O cadastro está pendente de processamento.</p> }
+      }
+    </div>
+  </section>
+  <footer>Cadastro assíncrono · Projeto de estudo</footer>
+</main>

@@ -1,5 +1,3 @@
 # services
 
-Comunicação HTTP com POST /clientes.
-
-Pasta reservada para evolução didática; ainda sem implementação.
+Serviço tipado: modo demonstração e POST /clientes com HttpClient.

@@ -4,12 +4,12 @@
 
 O usuário já conhece APIs e programação e quer aprender Kotlin gradualmente,
 com explicações das responsabilidades pasta a pasta. O domínio é cadastro de
-clientes. Este scaffold contém somente documentação e diretórios reservados,
-sem código da aplicação, instalação de dependências ou provisionamento AWS.
+clientes. O frontend Angular está implementado em modo demonstração, com nome, e-mail
+e CPF. Backend e AWS permanecem sem implementação/provisionamento.
 
 ## Decisões do fluxo
 
-1. A tela coleta nome e e-mail e envia JSON para `POST /clientes`.
+1. A tela coleta nome, e-mail e CPF e envia JSON para `POST /clientes`.
 2. A API Kotlin com Spring Boot recebe `CadastroRequest` e faz validação básica.
 3. A API monta `CadastroSolicitado`, serializa em JSON e publica no SNS.
 4. Após a publicação aceita, retorna `202 Accepted`: solicitação pendente,
@@ -25,7 +25,7 @@ sucesso; detalhes de falhas e novas tentativas serão definidos nas próximas et
 
 ```mermaid
 flowchart TD
-    T["Tela: nome e e-mail"] -->|"POST /clientes · JSON"| A["API Kotlin Spring Boot: CadastroRequest"]
+    T["Tela: nome, e-mail e CPF"] -->|"POST /clientes · JSON"| A["API Kotlin Spring Boot: CadastroRequest"]
     A --> V["Validação básica"]
     V --> E["Monta CadastroSolicitado e serializa JSON"]
     E --> SNS["SNS: distribui a solicitação"]
@@ -47,7 +47,8 @@ Exemplo didático do corpo HTTP; regras detalhadas ainda serão definidas:
 ```json
 {
   "nome": "Cliente Exemplo",
-  "email": "cliente@example.com"
+  "email": "cliente@example.com",
+  "cpf": "12345678901"
 }
 ```
 
@@ -61,7 +62,7 @@ O formato completo das mensagens e do corpo da resposta 202 ainda será decidido
 | Pasta | Responsabilidade prevista |
 | --- | --- |
 | `frontend/src/components` | Componentes reutilizáveis da interface. |
-| `frontend/src/pages` | Tela de cadastro com nome e e-mail. |
+| `frontend/src/pages` | Tela de cadastro com nome, e-mail e CPF. |
 | `frontend/src/services` | Comunicação HTTP com POST /clientes. |
 | `frontend/src/types` | Tipos usados pela interface e pelo contrato HTTP. |
 | `frontend/public` | Arquivos públicos estáticos. |
@@ -85,7 +86,7 @@ podem coexistir no mesmo microsserviço; pastas distintas não exigem implantaç
 
 ## Ainda não decidido
 
-- Tecnologia do frontend, hospedagem e topologia de implantação.
+- Hospedagem e topologia de implantação. Frontend decidido: Angular 22.
 - Versões de Kotlin, Spring Boot, JDK e ferramentas de build.
 - Autenticação, autorização e infraestrutura local.
 - Regras detalhadas de negócio, duplicidades e acompanhamento do cadastro.
@@ -100,7 +101,8 @@ podem coexistir no mesmo microsserviço; pastas distintas não exigem implantaç
 5. Estudar falhas, retry, DLQ e idempotência para mensagens repetidas.
 6. Avaliar consistência entre gravação e eventual publicação de ClienteCadastrado.
 
-Essas etapas são orientação de estudo, não funcionalidades já implementadas.
+O formulário Angular já foi implementado. As integrações backend e AWS seguem
+como próximas etapas.
 Nunca versionar chaves, tokens, senhas ou certificados com chave privada.
 
 ## Referências anteriores
@@ -113,9 +115,25 @@ Não replicar os domínios de campanhas ou funcionários. Avro não foi escolhid
 a solicitação deste laboratório usa JSON.
 
 O exemplo anterior `ExemploApi` era apenas um controller retornando uma mensagem
-JSON, sem SNS ou banco. Referências antigas a Angular, CPF e `POST /clients`
-não fazem parte das decisões atuais: a tela prevista tem nome/e-mail,
-`POST /clientes`, e tecnologia frontend em aberto.
+JSON, sem SNS ou banco. Em uma decisão posterior explícita, Angular e CPF
+foram incorporados ao frontend. A rota continua `POST /clientes`; `/clients`
+é apenas referência histórica.
 
 Os desenhos antigos foram preservados como histórico e podem conter essas
 suposições superadas. Consulte este documento e o Mermaid para as decisões atuais.
+
+## Frontend implementado
+
+O formulário valida obrigatórios, e-mail e CPF com exatamente 11 dígitos.
+Não calcula dígitos verificadores do CPF nem substitui validação de negócio.
+O modo demonstração é padrão: exibe o payload apenas na página, sem HTTP ou
+persistência. O service tipado está preparado para POST /clientes e exige
+202 Accepted para informar recebimento pendente. A resposta pode ter corpo vazio.
+
+A configuração pública em `frontend/src/config/api.config.ts` controla `demo` e
+`baseUrl`. Para integração, definir `demo: false` e a origem da API, sem `/clientes`.
+O backend deverá permitir a origem local via CORS. Requisições expiram em 15 s;
+não há retry automático, pois o processamento pode já ter sido aceito.
+Não incluir segredos nessa configuração. Não há armazenamento local dos dados.
+
+Veja [instruções do frontend](../frontend/README.md).

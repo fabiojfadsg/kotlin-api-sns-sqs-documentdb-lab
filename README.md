@@ -1,12 +1,12 @@
 # Laboratório de cadastro assíncrono de clientes
 
 Projeto público educacional para aprender Kotlin e as responsabilidades de cada
-camada, construindo uma etapa por vez. O repositório contém somente documentação
-e pastas reservadas; ainda não há aplicação executável ou infraestrutura provisionada.
+camada, construindo uma etapa por vez. O frontend Angular já funciona localmente em modo demonstração. O backend
+continua reservado, sem implementação ou infraestrutura provisionada.
 
 ## Fluxo decidido
 
-Tela com nome e e-mail → `POST /clientes` → API Kotlin com Spring Boot →
+Tela Angular com nome, e-mail e CPF → `POST /clientes` → API Kotlin com Spring Boot →
 `CadastroSolicitado` em JSON → SNS → SQS → consumidor Kotlin → serviço →
 repositório → Amazon DocumentDB.
 
@@ -19,7 +19,7 @@ regras de negócio e usa o repositório para salvar no DocumentDB.
 
 ## Organização inicial
 
-- `frontend/`: tela, componentes, comunicação HTTP e tipos. Tecnologia ainda indefinida.
+- `frontend/`: tela, componentes, comunicação HTTP e tipos. Angular 22.
 - `backend/`: pastas Kotlin para entrada HTTP, contratos, mensageria, serviços,
   persistência, configuração, erros e testes. API e consumidor podem compartilhar
   o mesmo microsserviço; a implantação será definida depois.
@@ -28,9 +28,24 @@ regras de negócio e usa o repositório para salvar no DocumentDB.
 - [Contexto e responsabilidades](docs/contexto.md): decisões, limites e próximos passos.
 - [Documentação visual](docs/README.md) e [fonte Mermaid](docs/fluxo.mmd).
 
-Cada pasta reservada tem um README explicativo e `.gitkeep`. Não há dependências
-instaladas, versões escolhidas ou comandos de execução definidos. Nunca versionar
-chaves, tokens, senhas ou outros segredos.
+O frontend possui configuração, dependências e testes; as pastas do backend seguem
+reservadas. Nunca versionar chaves, tokens, senhas ou outros segredos.
+
+## Executar o frontend
+
+Com Node.js 24.15 ou superior da linha 24 e npm instalados:
+
+```sh
+cd frontend
+npm install
+npm start
+```
+
+Abra http://localhost:4200. O modo demonstração exibe o JSON e não envia nem salva
+dados. Veja [instruções e configuração da API](frontend/README.md).
+
+A imagem preservada abaixo pode omitir o CPF, adicionado posteriormente;
+o contrato atual está no contexto e no Mermaid.
 
 ## Como continuar
 

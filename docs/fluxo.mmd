@@ -1,5 +1,5 @@
 flowchart TD
-    T["Tela: nome e e-mail"] -->|"POST /clientes · JSON"| A["API Kotlin Spring Boot: CadastroRequest"]
+    T["Tela: nome, e-mail e CPF"] -->|"POST /clientes · JSON"| A["API Kotlin Spring Boot: CadastroRequest"]
     A --> V["Validação básica"]
     V --> E["Monta CadastroSolicitado e serializa JSON"]
     E --> SNS["SNS: distribui a solicitação"]
