@@ -1,3 +1,6 @@
+> Integração local ativada (`demo: false`) após teste real de publicação e persistência.
+> Para usar apenas a prévia sem infraestrutura, altere para `demo: true`.
+
 # Frontend Angular
 
 Formulário didático em português para nome, e-mail e CPF. Angular 22.1.5,
@@ -34,7 +37,7 @@ A configuração fica em `src/config/api.config.ts`:
 
 ```ts
 export const apiConfig: ApiConfig = {
-  demo: true,
+  demo: false,
   baseUrl: 'http://localhost:8080'
 };
 ```

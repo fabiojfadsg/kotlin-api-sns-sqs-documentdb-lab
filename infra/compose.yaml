@@ -1,0 +1,26 @@
+name: cadastro-lab
+services:
+  mongodb:
+    image: mongo:8.0
+    ports: ["127.0.0.1:27017:27017"]
+    volumes: ["mongo-data:/data/db"]
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  localstack:
+    image: localstack/localstack:4.0.3
+    ports: ["127.0.0.1:4566:4566"]
+    environment:
+      SERVICES: sns,sqs
+      AWS_DEFAULT_REGION: us-east-1
+    volumes:
+      - ./init-localstack.sh:/etc/localstack/init/ready.d/init.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /tmp/cadastro-ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+volumes:
+  mongo-data:

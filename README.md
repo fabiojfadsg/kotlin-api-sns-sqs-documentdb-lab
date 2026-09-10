@@ -1,8 +1,8 @@
 # Laboratório de cadastro assíncrono de clientes
 
 Projeto público educacional para aprender Kotlin e as responsabilidades de cada
-camada, construindo uma etapa por vez. O frontend Angular já funciona localmente em modo demonstração. O backend
-continua reservado, sem implementação ou infraestrutura provisionada.
+camada, construindo uma etapa por vez. O frontend Angular funciona localmente. A API Kotlin e a infraestrutura local SNS/SQS + MongoDB estão implementadas.
+Consulte [execução local completa](backend/README.md).
 
 ## Fluxo decidido
 
@@ -41,8 +41,7 @@ npm install
 npm start
 ```
 
-Abra http://localhost:4200. O modo demonstração exibe o JSON e não envia nem salva
-dados. Veja [instruções e configuração da API](frontend/README.md).
+Abra http://localhost:4200. A integração com a API local é configurada em frontend/src/config/api.config.ts. Veja [instruções e configuração da API](frontend/README.md).
 
 A imagem preservada abaixo pode omitir o CPF, adicionado posteriormente;
 o contrato atual está no contexto e no Mermaid.

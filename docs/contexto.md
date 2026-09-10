@@ -137,3 +137,15 @@ não há retry automático, pois o processamento pode já ter sido aceito.
 Não incluir segredos nessa configuração. Não há armazenamento local dos dados.
 
 Veja [instruções do frontend](../frontend/README.md).
+
+## Etapa local implementada
+
+API Kotlin Spring Boot, SNS/SQS em LocalStack e MongoDB local implementados.
+O fluxo preserva publicação antes do 202 e persistência somente pelo consumidor.
+GET /clientes/{requestId} permite consultar a gravação. O _id garante idempotência
+para reentrega do mesmo evento; novos POSTs com mesmo CPF são permitidos.
+Retry por visibilidade 30 s e DLQ após 3 recebimentos. MongoDB é substituto
+didático, não DocumentDB real nem garantia de paridade. As indicações anteriores
+de backend reservado descrevem a etapa anterior.
+
+[Comandos, configuração e limitações](../backend/README.md).
